@@ -11,4 +11,6 @@ const server = http.createServer(app);
 
 // Démarrage du server
 
-server.listen(port);
+server.listen(port, function() {
+    console.log("Akongo Zoo Manager Server démarré sur le port " + port)
+});

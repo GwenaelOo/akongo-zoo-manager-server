@@ -1,11 +1,16 @@
 const express = require('express');
+const bodyParser = require('body-parser')
 const app = express();
 
-app.use((req, res, next) => {
-    res.status(200).json({
-        msg: 'Connexion au server réussie'
-    })
+const speciesRoutes = require('./api/routes/species')
 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
 
-export default app
+app.use(bodyParser());
+app.use('/species', speciesRoutes);
+
+module.exports = app;
