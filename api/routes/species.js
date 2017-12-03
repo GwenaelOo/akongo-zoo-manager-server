@@ -22,7 +22,6 @@ db.once('open', function () {
     console.log("Connexion à la base OK");
 });
 
-
 // Création du modèle pour une espèce
 
 var specieSchema = mongoose.Schema({
@@ -48,11 +47,24 @@ var specieSchema = mongoose.Schema({
 }); 
 
 
-
 // Debut des routes
 
-// Route GET FACTICE
+// Route GET 
 
+router.get('/:zooId', (req, res, next) => {
+
+    let collection = 'species-' + req.params.zooId;
+    let Specie = mongoose.model('Specie', specieSchema, collection);
+    let specie = new Specie();  
+
+    Specie.find(function (err, SpeciesList) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(SpeciesList);
+        console.log("[GET] Récupération de l'ensemble de la collection du ZOO " + req.params.zooId)  
+    });
+});
 
 
 // Route POST Permettant de poster une nouvelle espèce
@@ -60,10 +72,8 @@ var specieSchema = mongoose.Schema({
 router.post('/:zooId', (req, res, next) => {
 
     let collection = 'species-' + req.params.zooId ;
-
-    var Specie = mongoose.model('Specie', specieSchema, collection);
-
-    var specie = new Specie();  
+    let Specie = mongoose.model('Specie', specieSchema, collection);
+    let specie = new Specie();  
     
     specie.SpecieName = req.body.newSpecie.SpecieName;
     specie.SpecieLatinName = req.body.newSpecie.SpecieLatinName;
@@ -93,7 +103,6 @@ router.post('/:zooId', (req, res, next) => {
         res.send({ message: 'Bravo, la piscine est maintenant stockée en base de données' });
         console.log("[POST] Ajout de l'espèce " + req.body.newSpecie.SpecieName + " à la collection d'espèces du ZOO " + req.params.zooId)
     })
- 
 });
 
 module.exports = router;
